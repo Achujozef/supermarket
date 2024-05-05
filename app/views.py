@@ -38,13 +38,21 @@ def user_login(request):
 
 
 def dashboard(request):
+    print("Inside dashboard view")  # Add a debug statement
     user_shop = get_object_or_404(Shop, user=request.user)
+    print("User shop:", user_shop)  # Add a debug statement
     total_orders = Orders.objects.filter(order__shop=user_shop).count()
+    print("Total orders:", total_orders)  # Add a debug statement
     total_sale = Orders.objects.filter(order__shop=user_shop).aggregate(total_sale=models.Sum('total_price'))['total_sale'] or 0
+    print("Total sale:", total_sale)  # Add a debug statement
     
     today_date = datetime.now().strftime('%Y-%m-%d')
+    print("Today's date:", today_date)  # Add a debug statement
     today_day = datetime.now().strftime('%A')
+    print("Today's day:", today_day)  # Add a debug statement
     total_products = Product.objects.filter(category__shop=user_shop).count()
+    print("Total products:", total_products)  # Add a debug statement
+    
     context = {
         'user_shop': user_shop,
         'total_orders': total_orders,
@@ -57,7 +65,9 @@ def dashboard(request):
 
 
 def add_product(request):
+    print("Inside add_product view")  # Add a debug statement
     user_shop = request.user.shop  # Retrieve the shop of the current user
+    print("User shop:", user_shop)  # Add a debug statement
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, user_shop=user_shop)
         if form.is_valid():
@@ -68,11 +78,13 @@ def add_product(request):
     return render(request, 'add_product.html', {'form': form})
 
 def add_category(request):
+    print("Inside add_category view")  # Add a debug statement
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             # Retrieve the shop information related to the currently logged-in user
             user_shop = request.user.shop
+            print("User shop:", user_shop)  # Add a debug statement
             
             # Associate the category with the shop of the currently logged-in user
             category = form.save(commit=False)
