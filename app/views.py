@@ -38,21 +38,14 @@ def user_login(request):
 
 
 def dashboard(request):
-    print("Inside dashboard view")  # Add a debug statement
     user_shop = get_object_or_404(Shop, user=request.user)
-    print("User shop:", user_shop)  # Add a debug statement
     total_orders = Orders.objects.filter(order__shop=user_shop).count()
-    print("Total orders:", total_orders)  # Add a debug statement
     total_sale = Orders.objects.filter(order__shop=user_shop).aggregate(total_sale=models.Sum('total_price'))['total_sale'] or 0
-    print("Total sale:", total_sale)  # Add a debug statement
     
     today_date = datetime.now().strftime('%Y-%m-%d')
-    print("Today's date:", today_date)  # Add a debug statement
     today_day = datetime.now().strftime('%A')
-    print("Today's day:", today_day)  # Add a debug statement
     total_products = Product.objects.filter(category__shop=user_shop).count()
-    print("Total products:", total_products)  # Add a debug statement
-    
+    print('user_shop',user_shop.logo.url)
     context = {
         'user_shop': user_shop,
         'total_orders': total_orders,
