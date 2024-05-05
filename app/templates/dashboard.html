@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .logo {
+            display: block;
+            margin: auto;
+            max-width: 200px; /* Adjust as needed */
+            max-height: 200px; /* Adjust as needed */
+            margin-top: 20px;
+        }
+        .welcome-message {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+            color: #007f5f; /* Green color */
+        }
+        .supermarket-details {
+            text-align: left;
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+        .other-details {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007f5f; /* Green color */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #005f45; /* Darker green color on hover */
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Dashboard</h2>
+            <div class="welcome-message">
+                Welcome, {{ user_shop.owner_name }}!
+                <br>
+                Today is {{ today_date }} ({{ today_day }})
+            </div>
+        </div>
+        <div class="supermarket-details">
+            {% if user_shop.logo%}
+            <img src="{{ user_shop.logo.url }}" alt="Logo" class="logo">
+            {% endif %}
+            <p>{{ user_shop.name }}</p>
+        </div>
+        <div class="other-details">
+            <p>Total Orders: {{ total_orders }}</p>
+            <p>Total Sale: ${{ total_sale }}</p>
+            <p>Total Products: ${{  total_products }}</p>
+            <div>
+                <a href="{% url 'add_product' %}"><button>Add Product</button></a>
+                <a href="{% url 'add_category' %}"><button>Add Category</button></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
