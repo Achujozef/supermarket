@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+        .product-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .product-actions {
+            display: flex;
+            align-items: center;
+        }
+        .product-actions a {
+            text-decoration: none;
+            margin-left: 10px;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .edit-btn {
+            background-color: #007f5f;
+            color: #fff;
+        }
+        .edit-btn:hover {
+            background-color: #005f45;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            color: #fff;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Products</h1>
+        <ul>
+            {% for product in products %}
+            <li>
+                <div class="product-info">
+                    {% if product.product_image%}
+                    <img src="{{ product.product_image.url }}" alt="Product Image">
+                    {% endif %}
+                    <div>
+                        {{ product.name }} - {{ product.quantity }} - ₹{{ product.price }} 
+                    </div>
+                </div>
+                <div class="product-actions">
+                    <a href="{% url 'edit_product' product.id %}" class="edit-btn">Edit</a>
+                    <a href="{% url 'delete_product' product.id %}" class="delete-btn">Delete</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

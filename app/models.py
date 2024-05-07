@@ -21,7 +21,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-
+    def delete(self, *args, **kwargs):
+        print('delete Called')
+        Product.objects.filter(category=self).update(category=None)
+        super(Category, self).delete(*args, **kwargs)
 
 class Customer(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
@@ -39,11 +42,10 @@ class Customer(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     name=models.CharField(max_length=40)
     product_image= models.ImageField(upload_to='product_image/',null=True,blank=True)
     price = models.PositiveIntegerField()
-    description=models.CharField(max_length=40)
     quantity = models.CharField(max_length=40)
     description = models.TextField()
     def __str__(self):
@@ -57,9 +59,16 @@ class Address(models.Model):
 
     def __str__(self):
         return self.full_address
-    
-    
+
+
 class Order(models.Model):
+    STATUS = (
+        ('Pending', 'Pending'),
+        ('Order Confirmed', 'Order Confirmed'),
+        ('Out for Delivery', 'Out for Delivery'),
+        ('Delivered', 'Delivered'),
+    )
+    status = models.CharField(max_length=50, null=True, choices=STATUS)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE,default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     delivery_address = models.ForeignKey(Address, on_delete=models.CASCADE)
@@ -68,17 +77,12 @@ class Order(models.Model):
         return f"Order {self.pk}"
 
 class Orders(models.Model):
-    STATUS = (
-        ('Pending', 'Pending'),
-        ('Order Confirmed', 'Order Confirmed'),
-        ('Out for Delivery', 'Out for Delivery'),
-        ('Delivered', 'Delivered'),
-    )
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=50, null=True, choices=STATUS)
+    
 
     def __str__(self):
         return f"OrderItem {self.pk}"

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .order-details p {
+            color: #555555;
+            margin-bottom: 10px;
+        }
+        .order-item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .order-item p {
+            color: #333333;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+        }
+        .options a {
+            color: #333333;
+            text-decoration: none;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="options">
+        <a href="{% url 'shop_orders' %}"><i class="fas fa-arrow-left"></i> Back to Orders List</a>
+        </div>
+        <h1>Order Details</h1>
+        <div class="order-details">
+            <p><strong>Order ID:</strong> {{ order.id }}</p>
+            <p><strong>Status:</strong> {{ order.status }}</p>
+            <!-- Add more details as needed -->
+        </div>
+        <h2>Order Items</h2>
+        <ul>
+            {% for order_item in order.order_items.all %}
+            <li class="order-item">
+                <img src="{{ order_item.product.product_image.url }}" alt="Product Image" class="avatar">
+                <div>
+                    <p><strong>Product:</strong> {{ order_item.product.name }} - {{ order_item.product.quantity }}</p>
+                    <p><strong>Price:</strong> ${{ order_item.product.price }}</p>
+                    <p><strong>Quantity:</strong> {{ order_item.quantity }}</p>
+                    <!-- Add more details about the order items if needed -->
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="options">
+            <a href="#" onclick="window.print()"><i class="fas fa-print"></i> Print</a>
+            <a href="#" onclick="downloadPDF()"><i class="fas fa-download"></i> Download PDF</a>
+            
+        </div>
+    </div>
+
+    <!-- JavaScript for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+    <script>
+        function downloadPDF() {
+            // Initialize jsPDF
+            const doc = new jsPDF();
+            
+            // Add content to the PDF
+            doc.text("Order Details", 10, 10);
+            doc.text("Order ID: {{ order.id }}", 10, 20);
+            doc.text("Status: {{ order.status }}", 10, 30);
+            
+            // Loop through order items and add them to the PDF
+            let y = 40;
+            {% for order_item in order.order_items.all %}
+            doc.text("Product: {{ order_item.product.name }}", 10, y);
+            doc.text("Quantity: {{ order_item.quantity }}", 10, y + 10);
+            doc.text("Price: ${{ order_item.product.price }}", 10, y + 20);
+            doc.text("Description: {{ order_item.product.description }}", 10, y + 30);
+            y += 40;
+            {% endfor %}
+            
+            // Save the PDF and initiate download
+            doc.save("order_details.pdf");
+        }
+    </script>
+    
+</body>
+</html>

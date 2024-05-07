@@ -25,6 +25,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
+        widgets = {
+            'category': forms.Select(attrs={'class': 'form-control'})  # Add a class for styling
+        }
+
 
 class CategoryForm(forms.ModelForm):
     class Meta:
